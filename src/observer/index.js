@@ -42,7 +42,7 @@ class Observer {
 }
 // Object.defineProperty数据劫持核心 兼容性在ie9以及以上
 function defineReactive(data, key, value) {
-  let childOb = observe(value); // 递归关键 --如果value还是一个对象会继续走一遍odefineReactive 层层遍历一直到value不是对象才停止
+  let childOb = observe(value); // 递归关键 --如果value还是一个对象会继续走一遍defineReactive 层层遍历一直到value不是对象才停止
   //   思考？如果Vue数据嵌套层级过深 >>性能会受影响
 
   let dep = new Dep(); // 为每个属性实例化一个Dep
