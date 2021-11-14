@@ -11,7 +11,7 @@ export function initMixin(Vue) {
     // vm.constructor指向的是vm.__proto__.constructor===Vue.prototype.constructor===Vue
     vm.$options = mergeOptions(vm.constructor.options, options);
     callHook(vm, "beforeCreate");
-    // 初始化状态
+    // 初始化状态，将data转化成响应式
     initState(vm);
     callHook(vm, "created");
     // 如果有el属性 进行模板渲染
@@ -29,7 +29,6 @@ export function initMixin(Vue) {
 
     // 如果不存在render属性
     if (!options.render) {
-      // 如果存在template属性
       let template = options.template;
 
       if (!template && el) {
@@ -37,7 +36,7 @@ export function initMixin(Vue) {
         template = el.outerHTML;
       }
 
-      // 最终需要把tempalte模板转化成render函数
+      // 如果存在template属性，把template模板转化成render函数
       if (template) {
         const render = compileToFunctions(template);
         options.render = render;

@@ -1,34 +1,36 @@
 import Dep from "./observer/dep.js";
 import { observe } from "./observer/index.js";
 import Watcher from "./observer/watcher";
-// 初始化状态 注意这里的顺序 比如我经常面试会问到 是否能在data里面直接使用prop的值 为什么？
+// 初始化状态 注意这里的顺序 面试会问到：是否能在data里面直接使用prop的值 为什么？
 // 这里初始化的顺序依次是 prop>methods>data>computed>watch
 export function initState(vm) {
   // 获取传入的数据对象
   const opts = vm.$options;
-  if (opts.props) {
-    initProps(vm);
-  }
-  if (opts.methods) {
-    initMethod(vm);
-  }
+  if (opts.props) initProps(vm, opts.props);
+  if (opts.methods) initMethods(vm, opts.methods);
   if (opts.data) {
-    // 初始化data
+    // 初始化自定义的data
     initData(vm);
+  } else {
+    observe((vm._data = {}), true /* asRootData */);
   }
-  if (opts.computed) {
-    initComputed(vm);
-  }
-  if (opts.watch) {
-    initWatch(vm);
+  if (opts.computed) initComputed(vm, opts.computed);
+  if (opts.watch) initWatch(vm, opts.watch);
+}
+
+function initProps() {}
+function initMethods(vm, methods) {
+  // 遍历 methods 对象，将 methods[key] 放到 vm 实例上
+  for (const key in methods) {
+    vm[key] =
+      typeof methods[key] !== "function" ? noop : bind(methods[key], vm);
   }
 }
-function initProps() {}
-function initMethod() {}
+
 // 初始化data数据
 function initData(vm) {
   let data = vm.$options.data;
-  //   实例的_data属性就是传入的data
+  // 实例的_data属性就是传入的data
   // vue组件data推荐使用函数 防止数据在组件之间共享
   data = vm._data = typeof data === "function" ? data.call(vm) : data;
 
@@ -42,7 +44,6 @@ function initData(vm) {
 }
 function initComputed(vm) {
   const computed = vm.$options.computed;
-
   const watchers = (vm._computedWatchers = {}); //用来存放计算watcher
 
   for (let k in computed) {
@@ -79,7 +80,7 @@ function createComputedGetter(key) {
         watcher.evaluate(); //计算属性取值的时候 如果是脏的  需要重新求值
         // 如果Dep还存在target 这个时候一般为渲染watcher 计算属性依赖的数据也需要收集
         if (Dep.target) {
-          watcher.depend()
+          watcher.depend();
         }
       }
       return watcher.value;
@@ -113,6 +114,7 @@ function createWatcher(vm, exprOrFn, handler, options = {}) {
   return vm.$watch(exprOrFn, handler, options);
 }
 
+// 代理 this.a = this._data.a;
 function proxy(object, sourceKey, key) {
   Object.defineProperty(object, key, {
     get() {
