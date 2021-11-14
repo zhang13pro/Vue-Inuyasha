@@ -18,7 +18,21 @@ export function initState(vm) {
   if (opts.watch) initWatch(vm, opts.watch);
 }
 
-function initProps() {}
+function initProps(vm, propsOptions) {
+  // 缓存 props 的每个 key，性能优化
+  const keys = (vm.$options._propKeys = []);
+
+  // 遍历 props 对象
+  for (const key in propsOptions) {
+    // 缓存 key
+    keys.push(key);
+    if (!(key in vm)) {
+      // 代理 key 到 vm 对象上
+      proxy(vm, `_props`, key);
+    }
+  }
+}
+
 function initMethods(vm, methods) {
   // 遍历 methods 对象，将 methods[key] 放到 vm 实例上
   for (const key in methods) {
