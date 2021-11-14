@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script src="/dist/vue.js"></script>
+  <script>
+      // Vue实例化
+      let vm = new Vue({
+        el: "#app",
+        data() {
+          return {
+            aa: 1,
+            bb: 2,
+            cc:3
+          };
+        },
+        // render(h) {
+        //   return h('div',{id:'a'},'hello')
+        // },
+        template: `<div id="a">hello 这是我自己写的Vue{{computedName}}{{cc}}</div>`,
+        computed: {
+          computedName() {
+            return this.aa + this.bb;
+          },
+        },
+      });
+      // 当我们每一次改变数据的时候  渲染watcher都会执行一次 这个是影响性能的
+      setTimeout(() => {
+       vm.cc=4
+      }, 2000);
+      console.log(vm);
+    </script>
+  </body>
+</html>
