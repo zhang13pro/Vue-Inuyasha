@@ -3,6 +3,7 @@ import { lifecycleMixin } from "./lifecycle";
 import { renderMixin } from "./render";
 import { initGlobalApi } from "./global-api/index";
 import { stateMixin } from "./state";
+
 // Vue就是一个构造函数 通过new关键字进行实例化
 // new =》__proto__ 指向 Vue.prototype
 function Vue(options) {
@@ -16,4 +17,5 @@ renderMixin(Vue);
 lifecycleMixin(Vue);
 stateMixin(Vue);
 initGlobalApi(Vue);
+
 export default Vue;
