@@ -10,7 +10,7 @@
     <div id="app"></div>
 
     <script src="/dist/vue.js"></script>
-  <script>
+    <script>
       // Vue实例化
       let vm = new Vue({
         el: "#app",
@@ -18,13 +18,16 @@
           return {
             aa: 1,
             bb: 2,
-            cc:3
+            cc: 3,
           };
         },
         // render(h) {
         //   return h('div',{id:'a'},'hello')
         // },
-        template: `<div id="a">hello 这是我自己写的Vue{{computedName}}{{cc}}</div>`,
+        template: `<div id="a">hello 这是手写的Vue2 
+                    测试计算属性--{{computedName}}
+                    2秒后改变数据--{{cc}}
+                  </div>`,
         computed: {
           computedName() {
             return this.aa + this.bb;
@@ -33,9 +36,9 @@
       });
       // 当我们每一次改变数据的时候  渲染watcher都会执行一次 这个是影响性能的
       setTimeout(() => {
-       vm.cc=4
+        vm.cc = 4;
       }, 2000);
-      console.log(vm);
+      console.log("vm实例", vm);
     </script>
   </body>
 </html>
