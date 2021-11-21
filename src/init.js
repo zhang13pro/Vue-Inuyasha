@@ -7,7 +7,7 @@ export function initMixin(Vue) {
   Vue.prototype._init = function (options) {
     const vm = this;
     // 这里的this代表调用_init方法的对象(实例对象)
-    // this.$options就是用户new Vue的时候传入的属性和全局的Vue.options合并之后的结果
+    // this.$options缓存 用户new Vue的时候传入的属性和全局的Vue.options合并之后的结果
     // vm.constructor指向的是vm.__proto__.constructor===Vue.prototype.constructor===Vue
     vm.$options = mergeOptions(vm.constructor.options, options);
     callHook(vm, "beforeCreate");
@@ -21,7 +21,7 @@ export function initMixin(Vue) {
   };
 
   // 这块代码在源码里面的位置其实是放在entry-runtime-with-compiler.js里面
-  // 代表的是Vue源码里面包含了compile编译功能 这个和runtime-only版本需要区分开
+  // 表示Vue包含compile编译功能的版本 和runtime-only版本区分开
   Vue.prototype.$mount = function (el) {
     const vm = this;
     const options = vm.$options;
