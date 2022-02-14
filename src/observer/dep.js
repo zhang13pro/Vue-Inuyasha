@@ -5,7 +5,7 @@
 let id = 0; //dep实例的唯一标识
 export default class Dep {
   constructor() {
-    this.id = id++; 
+    this.id = id++;
     this.subs = []; // 这个是存放watcher的容器
   }
   depend() {
@@ -24,7 +24,7 @@ export default class Dep {
   }
 }
 // 默认Dep.target为null
-Dep.target=null
+Dep.target = null;
 // 栈结构用来存watcher
 const targetStack = [];
 

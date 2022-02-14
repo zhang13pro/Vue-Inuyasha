@@ -1,17 +1,16 @@
 let callbacks = [];
 let pending = false;
 function flushCallbacks() {
- 
-    pending = false;  //把标志还原为false
-    // 依次执行回调
-    for (let i = 0; i < callbacks.length; i++) {
-      callbacks[i]();
-    }
+  pending = false; //把标志还原为false
+  // 依次执行回调
+  for (let i = 0; i < callbacks.length; i++) {
+    callbacks[i]();
+  }
 }
 let timerFunc; //定义异步方法  采用优雅降级
 if (typeof Promise !== "undefined") {
   // 如果支持promise
-    const p = Promise.resolve();
+  const p = Promise.resolve();
   timerFunc = () => {
     p.then(flushCallbacks);
   };
@@ -43,6 +42,7 @@ export function nextTick(cb) {
   // 除了渲染watcher  还有用户自己手动调用的nextTick 一起被收集到数组
   callbacks.push(cb);
   if (!pending) {
+    // Promise.resolve().then(flushCallbacks) // Vue3 不考虑兼容性
     // 如果多次调用nextTick  只会执行一次异步 等异步队列清空之后再把标志变为false
     pending = true;
     timerFunc();

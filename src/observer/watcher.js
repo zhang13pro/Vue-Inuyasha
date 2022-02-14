@@ -1,13 +1,13 @@
 import { pushTarget, popTarget } from "./dep";
 import { queueWatcher } from "./scheduler";
-import {isObject} from '../util/index'
+import { isObject } from "../util/index";
 // 全局变量id  每次new Watcher都会自增
 let id = 0;
 
-export default class Watcher {
+class Watcher {
   constructor(vm, exprOrFn, cb, options) {
     this.vm = vm;
-    this.exprOrFn = exprOrFn;
+    this.exprOrFn = exprOrFn; // updateComponent
     this.cb = cb; //回调函数 比如在watcher更新之前可以执行beforeUpdate方法
     this.options = options; //额外的选项 true代表渲染watcher
     this.id = id++; // watcher的唯一标识
@@ -54,9 +54,9 @@ export default class Watcher {
     // 计算属性依赖的值发生变化 只需要把dirty置为true  下次访问到了重新计算
     if (this.lazy) {
       this.dirty = true;
-    }else{
-      // 每次watcher进行更新的时候  可以让他们先缓存起来  之后再一起调用
-      // 异步队列机制
+    } else {
+      // 多次调用update 将watcher先缓存起来，等一会一起更新
+      // 异步队列机制（异步更新）
       queueWatcher(this);
     }
   }
@@ -64,11 +64,11 @@ export default class Watcher {
     this.value = this.get();
     this.dirty = false;
   }
-  depend(){
-    // 计算属性的watcher存储了依赖项的dep 
-    let i=this.deps.length
-    while(i--){
-      this.deps[i].depend() //调用依赖项的dep去收集渲染watcher
+  depend() {
+    // 计算属性的watcher存储了依赖项的dep
+    let i = this.deps.length;
+    while (i--) {
+      this.deps[i].depend(); //调用依赖项的dep去收集渲染watcher
     }
   }
   run() {
@@ -76,7 +76,7 @@ export default class Watcher {
     const oldVal = this.value; //老值
     this.value = newVal; //跟着之后  老值就成为了现在的值
     if (this.user) {
-      if(newVal!==oldVal||isObject(newVal)){
+      if (newVal !== oldVal || isObject(newVal)) {
         this.cb.call(this.vm, newVal, oldVal);
       }
     } else {
@@ -85,3 +85,5 @@ export default class Watcher {
     }
   }
 }
+
+export default Watcher;

@@ -1,6 +1,6 @@
 import { nextTick } from "../util/next-tick";
 let queue = [];
-let has = {};
+let has = {}; // 存放watcher的列表
 function flushSchedulerQueue() {
   for (let index = 0; index < queue.length; index++) {
     //   调用watcher的run方法 执行真正的更新操作
@@ -19,7 +19,7 @@ export function queueWatcher(watcher) {
     //  同步代码执行 把全部的watcher都放到队列里面去
     queue.push(watcher);
     has[id] = true;
-    // 进行异步调用
+    // 进行异步调用 批处理 防抖
     nextTick(flushSchedulerQueue);
   }
 }

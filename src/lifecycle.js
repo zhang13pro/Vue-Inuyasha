@@ -15,6 +15,7 @@ export function mountComponent(vm, el) {
   let updateComponent = () => {
     vm._update(vm._render());
   };
+  // 使用观察者模式代替 手动调用 updateComponent()
   new Watcher(
     vm,
     updateComponent,
