@@ -63,7 +63,7 @@ function initComputed(vm) {
   for (let k in computed) {
     const userDef = computed[k]; //获取用户定义的计算属性
     const getter = typeof userDef === "function" ? userDef : userDef.get; //创建计算属性watcher使用
-    // 创建计算watcher  lazy设置为true
+    // 计算属性本质就是watcher  将watcher和属性做一个映射
     watchers[k] = new Watcher(vm, getter, () => {}, { lazy: true });
     defineComputed(vm, k, userDef);
   }
@@ -88,13 +88,13 @@ function defineComputed(target, key, userDef) {
 
 function createComputedGetter(key) {
   return function () {
-    const watcher = this._computedWatchers[key]; //获取对应的计算属性watcher
+    const watcher = this._computedWatchers[key]; //获取对应的计算属性watcher 其中包含了getter
     if (watcher) {
       if (watcher.dirty) {
         watcher.evaluate(); //计算属性取值的时候 如果是脏的  需要重新求值
         // 如果Dep还存在target 这个时候一般为渲染watcher 计算属性依赖的数据也需要收集
         if (Dep.target) {
-          watcher.depend();
+          watcher.depend(); // 一个watcher对应多个dep
         }
       }
       return watcher.value;
@@ -141,12 +141,12 @@ function proxy(object, sourceKey, key) {
 }
 
 export function stateMixin(Vue) {
-  Vue.prototype.$watch = function (exprOrFn, cb, options) {
+  Vue.prototype.$watch = function (exprOrFn, handler, options) {
+    options.user = true; // 用户watcher
     const vm = this;
-    // 这里表示是一个用户watcher
-    let watcher = new Watcher(vm, exprOrFn, cb, { ...options, user: true });
+    let watcher = new Watcher(vm, exprOrFn, handler, options);
     if (options.immediate) {
-      cb(); //如果立刻执行
+      handler(watcher.value);
     }
   };
 }
