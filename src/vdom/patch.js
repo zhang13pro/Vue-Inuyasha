@@ -1,4 +1,4 @@
-// patch用来渲染和更新视图 
+// patch用来渲染和更新视图
 export function patch(oldVnode, vnode) {
   // 判断传入的oldVnode是否是一个真实元素
   // 这里很关键  初次渲染 传入的vm.$el就是咱们传入的el选项  所以是真实dom
@@ -61,24 +61,15 @@ function createComponent(vnode) {
   // 初始化组件
   // 创建组件实例
   let i = vnode.data;
-  if ((i = i.hook) && (i = i.init)) {
-    i(vnode);
-  }
+  // i = vnode.data.hook.init
+  if ((i = i.hook) && (i = i.init)) i(vnode);
   // 如果组件实例化完毕有componentInstance属性 那证明是组件
-  if (vnode.componentInstance) {
-    return true;
-  }
+  if (vnode.componentInstance) return true;
 }
 
 // 虚拟dom转成真实dom
 function createElm(vnode) {
-  const {
-    tag,
-    data,
-    key,
-    children,
-    text
-  } = vnode;
+  const { tag, data, key, children, text } = vnode;
   //   判断虚拟dom 是元素节点还是文本节点
   if (typeof tag === "string") {
     if (createComponent(vnode)) {
@@ -166,9 +157,9 @@ function updateChildren(parent, oldCh, newCh) {
   while (oldStartIndex <= oldEndIndex && newStartIndex <= newEndIndex) {
     // 因为暴力对比过程把移动的vnode置为 undefined 如果不存在vnode节点 直接跳过
     if (!oldStartVnode) {
-      oldStartVnode = oldCh[++oldStartIndex]
+      oldStartVnode = oldCh[++oldStartIndex];
     } else if (!oldEndVnode) {
-      oldEndVnode = oldCh[--oldEndIndex]
+      oldEndVnode = oldCh[--oldEndIndex];
     } else if (isSameVnode(oldStartVnode, newStartVnode)) {
       // 头和头对比 依次向后追加
       patch(oldStartVnode, newStartVnode); //递归比较儿子以及他们的子节点
@@ -220,9 +211,8 @@ function updateChildren(parent, oldCh, newCh) {
     for (let i = oldStartIndex; i <= oldEndIndex; i++) {
       let child = oldCh[i];
       if (child != undefined) {
-        parent.removeChild(child.el)
+        parent.removeChild(child.el);
       }
     }
   }
-
 }

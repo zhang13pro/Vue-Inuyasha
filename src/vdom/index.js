@@ -11,6 +11,7 @@ export default class Vnode {
     this.key = key;
     this.children = children;
     this.text = text;
+    // 组件节点标识
     this.componentOptions = componentOptions;
   }
 }
@@ -37,8 +38,8 @@ function createComponent(vm, tag, data, key, children, Ctor) {
   data.hook = {
     // 组件创建过程的自身初始化方法
     init(vnode) {
-      let child = (vnode.componentInstance = new Ctor({ _isComponent: true })); //实例化组件
-      child.$mount(); //因为没有传入el属性  需要手动挂载 为了在组件实例上面增加$el方法可用于生成组件的真实渲染节点
+      let vm = (vnode.componentInstance = new Ctor({ _isComponent: true })); //实例化组件
+      vm.$mount(); //因为没有传入el属性  需要手动挂载 为了在组件实例上面增加$el方法可用于生成组件的真实渲染节点
     },
   };
 

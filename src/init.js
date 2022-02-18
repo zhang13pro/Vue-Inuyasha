@@ -25,9 +25,9 @@ export function initMixin(Vue) {
   Vue.prototype.$mount = function (el) {
     const vm = this;
     const options = vm.$options;
-    el = document.querySelector(el);
+    vm.$el = el = document.querySelector(el);
 
-    // 如果不存在render属性
+    // 将模板转换成对应渲染函数 =>虚拟dom vnode => diff算法 更新虚拟dom => 产生真实节点，更新
     if (!options.render) {
       let template = options.template;
 
@@ -35,15 +35,16 @@ export function initMixin(Vue) {
         // 如果不存在render和template 但是存在el属性 直接将模板赋值到el所在的外层html结构（就是el本身 并不是父元素）
         template = el.outerHTML;
       }
-
       // 如果存在template属性，把template模板转化成render函数
       if (template) {
         const render = compileToFunctions(template);
         options.render = render;
       }
+      // 既没template又没有el的情况呢？
+      // 要熟悉 options.components API 的用法
     }
 
-    // 将当前组件实例挂载到真实的el节点上面
+    // 组件挂载流程
     return mountComponent(vm, el);
   };
 }
