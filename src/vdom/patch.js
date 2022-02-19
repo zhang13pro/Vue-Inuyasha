@@ -128,6 +128,7 @@ function updateProperties(vnode, oldProps = {}) {
 
 // 判断两个vnode的标签和key是否相同 如果相同 就可以认为是同一节点就地复用
 function isSameVnode(oldVnode, newVnode) {
+  // 思考：v-for为什么添加key，
   return oldVnode.tag === newVnode.tag && oldVnode.key === newVnode.key;
 }
 // diff算法核心 采用双指针的方式 对比新老vnode的儿子节点
@@ -183,8 +184,8 @@ function updateChildren(parent, oldCh, newCh) {
       oldEndVnode = oldCh[--oldEndIndex];
       newStartVnode = newCh[++newStartIndex];
     } else {
-      // 上述四种情况都不满足 那么需要暴力对比
-      // 根据老的子节点的key和index的映射表 从新的开始子节点进行查找 如果可以找到就进行移动操作 如果找不到则直接进行插入
+      // 上述四种情况属于diff的优化 优化了向后添加，向前添加，尾部移动到头部，头部移动到尾部，反转
+      // 暴力对比 根据老的子节点的key和index的映射表 从新的开始子节点进行查找 如果可以找到就进行移动操作 如果找不到则直接进行插入
       let moveIndex = map[newStartVnode.key];
       if (!moveIndex) {
         // 老的节点找不到  直接插入
@@ -200,7 +201,7 @@ function updateChildren(parent, oldCh, newCh) {
   // 如果老节点循环完毕了 但是新节点还有  证明  新节点需要被添加到头部或者尾部
   if (newStartIndex <= newEndIndex) {
     for (let i = newStartIndex; i <= newEndIndex; i++) {
-      // 这是一个优化写法 insertBefore的第一个参数是null等同于appendChild作用
+      // 这是一个优化写法 insertBefore的第二个参数是null等同于appendChild作用
       const ele =
         newCh[newEndIndex + 1] == null ? null : newCh[newEndIndex + 1].el;
       parent.insertBefore(createElm(newCh[i]), ele);

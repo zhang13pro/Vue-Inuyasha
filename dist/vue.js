@@ -1,23 +1,33 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-  typeof define === 'function' && define.amd ? define(factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.Vue = factory());
-}(this, (function () { 'use strict';
+  typeof exports === "object" && typeof module !== "undefined"
+    ? (module.exports = factory())
+    : typeof define === "function" && define.amd
+    ? define(factory)
+    : ((global =
+        typeof globalThis !== "undefined" ? globalThis : global || self),
+      (global.Vue = factory()));
+})(this, function () {
+  "use strict";
 
   function _typeof(obj) {
     "@babel/helpers - typeof";
 
-    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-      _typeof = function (obj) {
-        return typeof obj;
-      };
-    } else {
-      _typeof = function (obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-      };
-    }
-
-    return _typeof(obj);
+    return (
+      (_typeof =
+        "function" == typeof Symbol && "symbol" == typeof Symbol.iterator
+          ? function (obj) {
+              return typeof obj;
+            }
+          : function (obj) {
+              return obj &&
+                "function" == typeof Symbol &&
+                obj.constructor === Symbol &&
+                obj !== Symbol.prototype
+                ? "symbol"
+                : typeof obj;
+            }),
+      _typeof(obj)
+    );
   }
 
   function _classCallCheck(instance, Constructor) {
@@ -39,60 +49,19 @@
   function _createClass(Constructor, protoProps, staticProps) {
     if (protoProps) _defineProperties(Constructor.prototype, protoProps);
     if (staticProps) _defineProperties(Constructor, staticProps);
+    Object.defineProperty(Constructor, "prototype", {
+      writable: false,
+    });
     return Constructor;
   }
 
-  function _defineProperty(obj, key, value) {
-    if (key in obj) {
-      Object.defineProperty(obj, key, {
-        value: value,
-        enumerable: true,
-        configurable: true,
-        writable: true
-      });
-    } else {
-      obj[key] = value;
-    }
-
-    return obj;
-  }
-
-  function ownKeys(object, enumerableOnly) {
-    var keys = Object.keys(object);
-
-    if (Object.getOwnPropertySymbols) {
-      var symbols = Object.getOwnPropertySymbols(object);
-      if (enumerableOnly) symbols = symbols.filter(function (sym) {
-        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-      });
-      keys.push.apply(keys, symbols);
-    }
-
-    return keys;
-  }
-
-  function _objectSpread2(target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i] != null ? arguments[i] : {};
-
-      if (i % 2) {
-        ownKeys(Object(source), true).forEach(function (key) {
-          _defineProperty(target, key, source[key]);
-        });
-      } else if (Object.getOwnPropertyDescriptors) {
-        Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-      } else {
-        ownKeys(Object(source)).forEach(function (key) {
-          Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-        });
-      }
-    }
-
-    return target;
-  }
-
   function _slicedToArray(arr, i) {
-    return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
+    return (
+      _arrayWithHoles(arr) ||
+      _iterableToArrayLimit(arr, i) ||
+      _unsupportedIterableToArray(arr, i) ||
+      _nonIterableRest()
+    );
   }
 
   function _arrayWithHoles(arr) {
@@ -100,14 +69,21 @@
   }
 
   function _iterableToArrayLimit(arr, i) {
-    if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
+    var _i =
+      arr == null
+        ? null
+        : (typeof Symbol !== "undefined" && arr[Symbol.iterator]) ||
+          arr["@@iterator"];
+
+    if (_i == null) return;
     var _arr = [];
     var _n = true;
     var _d = false;
-    var _e = undefined;
+
+    var _s, _e;
 
     try {
-      for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) {
         _arr.push(_s.value);
 
         if (i && _arr.length === i) break;
@@ -132,7 +108,8 @@
     var n = Object.prototype.toString.call(o).slice(8, -1);
     if (n === "Object" && o.constructor) n = o.constructor.name;
     if (n === "Map" || n === "Set") return Array.from(o);
-    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n))
+      return _arrayLikeToArray(o, minLen);
   }
 
   function _arrayLikeToArray(arr, len) {
@@ -144,14 +121,16 @@
   }
 
   function _nonIterableRest() {
-    throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+    throw new TypeError(
+      "Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."
+    );
   }
 
   // dep和watcher是多对多的关系
   // 每个属性都有自己的dep
   var id$1 = 0; //dep实例的唯一标识
 
-  var Dep = /*#__PURE__*/function () {
+  var Dep = /*#__PURE__*/ (function () {
     function Dep() {
       _classCallCheck(this, Dep);
 
@@ -159,32 +138,36 @@
       this.subs = []; // 这个是存放watcher的容器
     }
 
-    _createClass(Dep, [{
-      key: "depend",
-      value: function depend() {
-        //   如果当前存在watcher
-        if (Dep.target) {
-          Dep.target.addDep(this); // 把自身-dep实例存放在watcher里面
-        }
-      }
-    }, {
-      key: "notify",
-      value: function notify() {
-        //   依次执行subs里面的watcher更新方法
-        this.subs.forEach(function (watcher) {
-          return watcher.update();
-        });
-      }
-    }, {
-      key: "addSub",
-      value: function addSub(watcher) {
-        //   把watcher加入到自身的subs容器
-        this.subs.push(watcher);
-      }
-    }]);
+    _createClass(Dep, [
+      {
+        key: "depend",
+        value: function depend() {
+          //   如果当前存在watcher
+          if (Dep.target) {
+            Dep.target.addDep(this); // 把自身-dep实例存放在watcher里面
+          }
+        },
+      },
+      {
+        key: "notify",
+        value: function notify() {
+          //   依次执行subs里面的watcher更新方法
+          this.subs.forEach(function (watcher) {
+            return watcher.update();
+          });
+        },
+      },
+      {
+        key: "addSub",
+        value: function addSub(watcher) {
+          //   把watcher加入到自身的subs容器
+          this.subs.push(watcher);
+        },
+      },
+    ]);
 
     return Dep;
-  }(); // 默认Dep.target为null
+  })(); // 默认Dep.target为null
   Dep.target = null; // 栈结构用来存watcher
 
   var targetStack = [];
@@ -200,13 +183,25 @@
 
   // 先保留数组原型
   var arrayProto = Array.prototype; // 然后将arrayMethods继承自数组原型
-  // 这里是面向切片编程思想（AOP）--不破坏封装的前提下，动态的扩展功能
+  // 这里是面向切面编程思想（AOP）--不破坏封装的前提下，动态的扩展功能
 
   var arrayMethods = Object.create(arrayProto);
-  var methodsToPatch = ["push", "pop", "shift", "unshift", "splice", "reverse", "sort"];
+  var methodsToPatch = [
+    "push",
+    "pop",
+    "shift",
+    "unshift",
+    "splice",
+    "reverse",
+    "sort",
+  ];
   methodsToPatch.forEach(function (method) {
     arrayMethods[method] = function () {
-      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      for (
+        var _len = arguments.length, args = new Array(_len), _key = 0;
+        _key < _len;
+        _key++
+      ) {
         args[_key] = arguments[_key];
       }
 
@@ -235,7 +230,7 @@
     };
   });
 
-  var Observer = /*#__PURE__*/function () {
+  var Observer = /*#__PURE__*/ (function () {
     // 观测值
     function Observer(value) {
       _classCallCheck(this, Observer);
@@ -249,7 +244,7 @@
         //  不可枚举
         enumerable: false,
         writable: true,
-        configurable: true
+        configurable: true,
       });
 
       if (Array.isArray(value)) {
@@ -263,33 +258,35 @@
       }
     }
 
-    _createClass(Observer, [{
-      key: "walk",
-      value: function walk(data) {
-        // 让对象上的所有属性依次进行观测
-        var keys = Object.keys(data);
+    _createClass(Observer, [
+      {
+        key: "walk",
+        value: function walk(data) {
+          // 让对象上的所有属性依次进行观测
+          var keys = Object.keys(data);
 
-        for (var i = 0; i < keys.length; i++) {
-          var key = keys[i];
-          var value = data[key];
-          defineReactive(data, key, value);
-        }
-      }
-    }, {
-      key: "observeArray",
-      value: function observeArray(items) {
-        for (var i = 0; i < items.length; i++) {
-          observe(items[i]);
-        }
-      }
-    }]);
+          for (var i = 0; i < keys.length; i++) {
+            var key = keys[i];
+            var value = data[key];
+            defineReactive(data, key, value);
+          }
+        },
+      },
+      {
+        key: "observeArray",
+        value: function observeArray(items) {
+          for (var i = 0; i < items.length; i++) {
+            observe(items[i]);
+          }
+        },
+      },
+    ]);
 
     return Observer;
-  }(); // Object.defineProperty数据劫持核心 兼容性在ie9以及以上
-
+  })(); // Object.defineProperty数据劫持核心 兼容性在ie9以及以上
 
   function defineReactive(data, key, value) {
-    var childOb = observe(value); // 递归关键 --如果value还是一个对象会继续走一遍odefineReactive 层层遍历一直到value不是对象才停止
+    var childOb = observe(value); // 递归关键 --如果value还是一个对象会继续走一遍defineReactive 层层遍历一直到value不是对象才停止
     //   思考？如果Vue数据嵌套层级过深 >>性能会受影响
 
     var dep = new Dep(); // 为每个属性实例化一个Dep
@@ -304,14 +301,12 @@
           if (childOb) {
             // 这里表示 属性的值依然是一个对象 包含数组和对象 childOb指代的就是Observer实例对象  里面的dep进行依赖收集
             // 比如{a:[1,2,3]} 属性a对应的值是一个数组 观测数组的返回值就是对应数组的Observer实例对象
-            childOb.dep.depend();
+            childOb.dep.depend(); // 如果数据结构类似 {a:[1,2,[3,4,[5,6]]]} 这种数组多层嵌套  数组包含数组的情况
+            // 那么我们访问a的时候 只是对第一层的数组进行了依赖收集 里面的数组因为没访问到  所以无法收集依赖
+            // 但是如果我们改变了a里面的第二层数组的值  是需要更新页面的  所以需要对数组递归进行依赖收集
 
             if (Array.isArray(value)) {
-              // 如果数据结构类似 {a:[1,2,[3,4,[5,6]]]} 这种数组多层嵌套  数组包含数组的情况  那么我们访问a的时候 只是对第一层的数组进行了依赖收集 里面的数组因为没访问到  所以五大收集依赖  但是如果我们改变了a里面的第二层数组的值  是需要更新页面的  所以需要对数组递归进行依赖收集
-              if (Array.isArray(value)) {
-                // 如果内部还是数组
-                dependArray(value); // 不停的进行依赖收集
-              }
+              dependArray(value); // 不停的进行依赖收集
             }
           }
         }
@@ -324,10 +319,9 @@
         observe(newValue);
         value = newValue;
         dep.notify(); // 通知渲染watcher去更新--派发更新
-      }
+      },
     });
   } // 递归收集数组依赖
-
 
   function dependArray(value) {
     for (var e, i = 0, l = value.length; i < l; i++) {
@@ -378,7 +372,7 @@
     var observer = new MutationObserver(flushCallbacks);
     var textNode = document.createTextNode(String(counter));
     observer.observe(textNode, {
-      characterData: true
+      characterData: true,
     });
 
     timerFunc = function timerFunc() {
@@ -402,6 +396,7 @@
     callbacks.push(cb);
 
     if (!pending) {
+      // Promise.resolve().then(flushCallbacks) // Vue3 不考虑兼容性
       // 如果多次调用nextTick  只会执行一次异步 等异步队列清空之后再把标志变为false
       pending = true;
       timerFunc();
@@ -409,7 +404,7 @@
   }
 
   var queue = [];
-  var has = {};
+  var has = {}; // 存放watcher的列表
 
   function flushSchedulerQueue() {
     for (var index = 0; index < queue.length; index++) {
@@ -417,11 +412,9 @@
       queue[index].run();
     } // 执行完之后清空队列
 
-
     queue = [];
     has = {};
   } // 实现异步队列机制
-
 
   function queueWatcher(watcher) {
     var id = watcher.id; //   watcher去重
@@ -429,7 +422,7 @@
     if (has[id] === undefined) {
       //  同步代码执行 把全部的watcher都放到队列里面去
       queue.push(watcher);
-      has[id] = true; // 进行异步调用
+      has[id] = true; // 进行异步调用 批处理 防抖
 
       nextTick(flushSchedulerQueue);
     }
@@ -437,7 +430,16 @@
 
   var ASSETS_TYPE = ["component", "directive", "filter"];
 
-  var LIFECYCLE_HOOKS = ["beforeCreate", "created", "beforeMount", "mounted", "beforeUpdate", "updated", "beforeDestroy", "destroyed"]; // 合并策略
+  var LIFECYCLE_HOOKS = [
+    "beforeCreate",
+    "created",
+    "beforeMount",
+    "mounted",
+    "beforeUpdate",
+    "updated",
+    "beforeDestroy",
+    "destroyed",
+  ]; // 合并策略
 
   var strats = {}; //生命周期合并策略
 
@@ -452,7 +454,6 @@
       return parentVal;
     }
   } // 组件 指令 过滤器的合并策略
-
 
   function mergeAssets(parentVal, childVal) {
     var res = Object.create(parentVal); //比如有同名的全局组件和自己定义的局部组件 那么parentVal代表全局组件 自己定义的组件是childVal  首先会查找自已局部组件有就用自己的  没有就从原型继承全局组件  res.__proto__===parentVal
@@ -478,7 +479,6 @@
     for (var k in parent) {
       mergeFiled(k);
     } // 父亲没有 儿子有
-
 
     for (var _k in child) {
       if (!parent.hasOwnProperty(_k)) {
@@ -507,7 +507,18 @@
   }
   function isReservedTag(tagName) {
     // 定义常见标签
-    var str = "html,body,base,head,link,meta,style,title," + "address,article,aside,footer,header,h1,h2,h3,h4,h5,h6,hgroup,nav,section," + "div,dd,dl,dt,figcaption,figure,picture,hr,img,li,main,ol,p,pre,ul," + "a,b,abbr,bdi,bdo,br,cite,code,data,dfn,em,i,kbd,mark,q,rp,rt,rtc,ruby," + "s,samp,small,span,strong,sub,sup,time,u,var,wbr,area,audio,map,track,video," + "embed,object,param,source,canvas,script,noscript,del,ins," + "caption,col,colgroup,table,thead,tbody,td,th,tr," + "button,datalist,fieldset,form,input,label,legend,meter,optgroup,option," + "output,progress,select,textarea," + "details,dialog,menu,menuitem,summary," + "content,element,shadow,template,blockquote,iframe,tfoot";
+    var str =
+      "html,body,base,head,link,meta,style,title," +
+      "address,article,aside,footer,header,h1,h2,h3,h4,h5,h6,hgroup,nav,section," +
+      "div,dd,dl,dt,figcaption,figure,picture,hr,img,li,main,ol,p,pre,ul," +
+      "a,b,abbr,bdi,bdo,br,cite,code,data,dfn,em,i,kbd,mark,q,rp,rt,rtc,ruby," +
+      "s,samp,small,span,strong,sub,sup,time,u,var,wbr,area,audio,map,track,video," +
+      "embed,object,param,source,canvas,script,noscript,del,ins," +
+      "caption,col,colgroup,table,thead,tbody,td,th,tr," +
+      "button,datalist,fieldset,form,input,label,legend,meter,optgroup,option," +
+      "output,progress,select,textarea," +
+      "details,dialog,menu,menuitem,summary," +
+      "content,element,shadow,template,blockquote,iframe,tfoot";
     var obj = {};
     str.split(",").forEach(function (tag) {
       obj[tag] = true;
@@ -517,12 +528,13 @@
 
   var id = 0;
 
-  var Watcher = /*#__PURE__*/function () {
+  var Watcher = /*#__PURE__*/ (function () {
     function Watcher(vm, exprOrFn, cb, options) {
       _classCallCheck(this, Watcher);
 
       this.vm = vm;
-      this.exprOrFn = exprOrFn;
+      this.exprOrFn = exprOrFn; // updateComponent
+
       this.cb = cb; //回调函数 比如在watcher更新之前可以执行beforeUpdate方法
 
       this.options = options; //额外的选项 true代表渲染watcher
@@ -543,8 +555,8 @@
       if (typeof exprOrFn === "function") {
         this.getter = exprOrFn;
       } else {
+        //用户watcher传过来的可能是一个字符串   类似 "a.a.a.a.b"
         this.getter = function () {
-          //用户watcher传过来的可能是一个字符串   类似a.a.a.a.b
           var path = exprOrFn.split(".");
           var obj = vm;
 
@@ -556,113 +568,135 @@
         };
       } // 非计算属性实例化就会默认调用get方法 进行取值  保留结果
 
-
       this.value = this.lazy ? undefined : this.get();
     }
 
-    _createClass(Watcher, [{
-      key: "get",
-      value: function get() {
-        pushTarget(this); // 在调用方法之前先把当前watcher实例推到全局Dep.target上
+    _createClass(Watcher, [
+      {
+        key: "get",
+        value: function get() {
+          pushTarget(this); // 在调用方法之前先把当前watcher实例推到全局Dep.target上
+          // 如果watcher是渲染watcher 那么就相当于执行  vm._update(vm._render())
+          // 这个方法在render函数执行的时候会取值 从而实现依赖收集
 
-        var res = this.getter.call(this.vm); //如果watcher是渲染watcher 那么就相当于执行  vm._update(vm._render()) 这个方法在render函数执行的时候会取值 从而实现依赖收集
+          var res = this.getter.call(this.vm);
+          popTarget(); // 在调用方法之后把当前watcher实例从全局Dep.target移除
 
-        popTarget(); // 在调用方法之后把当前watcher实例从全局Dep.target移除
+          return res;
+        }, //   把dep放到deps里面 同时保证同一个dep只被保存到watcher一次  同样的  同一个watcher也只会保存在dep一次
+      },
+      {
+        key: "addDep",
+        value: function addDep(dep) {
+          var id = dep.id;
 
-        return res;
-      } //   把dep放到deps里面 同时保证同一个dep只被保存到watcher一次  同样的  同一个watcher也只会保存在dep一次
+          if (!this.depsId.has(id)) {
+            this.depsId.add(id);
+            this.deps.push(dep); //   直接调用dep的addSub方法  把自己--watcher实例添加到dep的subs容器里面
 
-    }, {
-      key: "addDep",
-      value: function addDep(dep) {
-        var id = dep.id;
-
-        if (!this.depsId.has(id)) {
-          this.depsId.add(id);
-          this.deps.push(dep); //   直接调用dep的addSub方法  把自己--watcher实例添加到dep的subs容器里面
-
-          dep.addSub(this);
-        }
-      } //   这里简单的就执行以下get方法  之后涉及到计算属性就不一样了
-
-    }, {
-      key: "update",
-      value: function update() {
-        // 计算属性依赖的值发生变化 只需要把dirty置为true  下次访问到了重新计算
-        if (this.lazy) {
-          this.dirty = true;
-        } else {
-          // 每次watcher进行更新的时候  可以让他们先缓存起来  之后再一起调用
-          // 异步队列机制
-          queueWatcher(this);
-        }
-      }
-    }, {
-      key: "evaluate",
-      value: function evaluate() {
-        this.value = this.get();
-        this.dirty = false;
-      }
-    }, {
-      key: "depend",
-      value: function depend() {
-        // 计算属性的watcher存储了依赖项的dep 
-        var i = this.deps.length;
-
-        while (i--) {
-          this.deps[i].depend(); //调用依赖项的dep去收集渲染watcher
-        }
-      }
-    }, {
-      key: "run",
-      value: function run() {
-        var newVal = this.get(); //新值
-
-        var oldVal = this.value; //老值
-
-        this.value = newVal; //跟着之后  老值就成为了现在的值
-
-        if (this.user) {
-          if (newVal !== oldVal || isObject(newVal)) {
-            this.cb.call(this.vm, newVal, oldVal);
+            dep.addSub(this);
           }
-        } else {
-          // 渲染watcher
-          this.cb.call(this.vm);
-        }
-      }
-    }]);
+        },
+      },
+      {
+        key: "update",
+        value: function update() {
+          // 计算属性依赖的值发生变化 只需要把dirty置为true  下次访问到了重新计算
+          if (this.lazy) {
+            this.dirty = true;
+          } else {
+            // 多次调用update 将watcher先缓存起来，等一会一起更新
+            // 异步队列机制（异步更新）
+            queueWatcher(this);
+          }
+        },
+      },
+      {
+        key: "evaluate",
+        value: function evaluate() {
+          this.value = this.get();
+          this.dirty = false;
+        },
+      },
+      {
+        key: "depend",
+        value: function depend() {
+          // 计算属性的watcher存储了依赖项的dep
+          var i = this.deps.length;
+
+          while (i--) {
+            this.deps[i].depend(); //调用依赖项的dep去收集渲染watcher
+          }
+        },
+      },
+      {
+        key: "run",
+        value: function run() {
+          var newVal = this.get(); //新值
+
+          var oldVal = this.value; //老值
+
+          this.value = newVal; //跟着之后  老值就成为了现在的值
+
+          if (this.user) {
+            if (newVal !== oldVal || isObject(newVal)) {
+              this.cb.call(this.vm, newVal, oldVal);
+            }
+          } else {
+            // 渲染watcher
+            this.cb.call(this.vm);
+          }
+        },
+      },
+    ]);
 
     return Watcher;
-  }();
+  })();
 
   // 这里初始化的顺序依次是 prop>methods>data>computed>watch
 
   function initState(vm) {
     // 获取传入的数据对象
     var opts = vm.$options;
-
-    if (opts.props) ;
-
-    if (opts.methods) ;
+    if (opts.props) initProps(vm, opts.props);
+    if (opts.methods) initMethods(vm, opts.methods);
 
     if (opts.data) {
-      // 初始化data
+      // 初始化自定义的data
       initData(vm);
+    } else {
+      observe((vm._data = {}));
     }
 
-    if (opts.computed) {
-      initComputed(vm);
-    }
+    if (opts.computed) initComputed(vm, opts.computed);
+    if (opts.watch) initWatch(vm, opts.watch);
+  }
 
-    if (opts.watch) {
-      initWatch(vm);
+  function initProps(vm, propsOptions) {
+    // 缓存 props 的每个 key，性能优化
+    var keys = (vm.$options._propKeys = []); // 遍历 props 对象
+
+    for (var key in propsOptions) {
+      // 缓存 key
+      keys.push(key);
+
+      if (!(key in vm)) {
+        // 代理 key 到 vm 对象上
+        proxy(vm, "_props", key);
+      }
     }
   }
 
+  function initMethods(vm, methods) {
+    // 遍历 methods 对象，将 methods[key] 放到 vm 实例上
+    for (var key in methods) {
+      vm[key] =
+        typeof methods[key] !== "function" ? noop : bind(methods[key], vm);
+    }
+  } // 初始化data数据
 
   function initData(vm) {
-    var data = vm.$options.data; //   实例的_data属性就是传入的data
+    var data = vm.$options.data; // 实例的_data属性就是传入的data
     // vue组件data推荐使用函数 防止数据在组件之间共享
 
     data = vm._data = typeof data === "function" ? data.call(vm) : data; // 把data数据代理到vm 也就是Vue实例上面 我们可以使用this.a来访问this._data.a
@@ -671,22 +705,21 @@
       proxy(vm, "_data", key);
     } //   对数据进行观测 --响应式数据核心
 
-
     observe(data);
   }
 
   function initComputed(vm) {
     var computed = vm.$options.computed;
-    var watchers = vm._computedWatchers = {}; //用来存放计算watcher
+    var watchers = (vm._computedWatchers = {}); //用来存放计算watcher
 
     for (var k in computed) {
       var userDef = computed[k]; //获取用户定义的计算属性
 
       var getter = typeof userDef === "function" ? userDef : userDef.get; //创建计算属性watcher使用
-      // 创建计算watcher  lazy设置为true
+      // 计算属性本质就是watcher  将watcher和属性做一个映射
 
       watchers[k] = new Watcher(vm, getter, function () {}, {
-        lazy: true
+        lazy: true,
       });
       defineComputed(vm, k, userDef);
     }
@@ -696,7 +729,7 @@
     enumerable: true,
     configurable: true,
     get: function get() {},
-    set: function set() {}
+    set: function set() {},
   };
 
   function defineComputed(target, key, userDef) {
@@ -713,7 +746,7 @@
 
   function createComputedGetter(key) {
     return function () {
-      var watcher = this._computedWatchers[key]; //获取对应的计算属性watcher
+      var watcher = this._computedWatchers[key]; //获取对应的计算属性watcher 其中包含了getter
 
       if (watcher) {
         if (watcher.dirty) {
@@ -721,7 +754,7 @@
           // 如果Dep还存在target 这个时候一般为渲染watcher 计算属性依赖的数据也需要收集
 
           if (Dep.target) {
-            watcher.depend();
+            watcher.depend(); // 一个watcher对应多个dep
           }
         }
 
@@ -729,7 +762,6 @@
       }
     };
   } // 初始化watch
-
 
   function initWatch(vm) {
     var watch = vm.$options.watch;
@@ -752,7 +784,8 @@
   }
 
   function createWatcher(vm, exprOrFn, handler) {
-    var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+    var options =
+      arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
     if (_typeof(handler) === "object") {
       options = handler; //保存用户传入的对象
@@ -765,7 +798,7 @@
     }
 
     return vm.$watch(exprOrFn, handler, options);
-  }
+  } // 代理 this.a = this._data.a;
 
   function proxy(object, sourceKey, key) {
     Object.defineProperty(object, key, {
@@ -774,25 +807,23 @@
       },
       set: function set(newValue) {
         object[sourceKey][key] = newValue;
-      }
+      },
     });
   }
 
   function stateMixin(Vue) {
-    Vue.prototype.$watch = function (exprOrFn, cb, options) {
-      var vm = this; // 这里表示是一个用户watcher
+    Vue.prototype.$watch = function (exprOrFn, handler, options) {
+      options.user = true; // 用户watcher
 
-      new Watcher(vm, exprOrFn, cb, _objectSpread2(_objectSpread2({}, options), {}, {
-        user: true
-      }));
+      var vm = this;
+      var watcher = new Watcher(vm, exprOrFn, handler, options);
 
       if (options.immediate) {
-        cb(); //如果立刻执行
+        handler(watcher.value);
       }
     };
   }
 
-  // 以下为源码的正则  对正则表达式不清楚的同学可以参考小编之前写的文章(前端进阶高薪必看 - 正则篇);
   var ncname = "[a-zA-Z_][\\-\\.0-9_a-zA-Z]*"; //匹配标签名 形如 abc-123
 
   var qnameCapture = "((?:".concat(ncname, "\\:)?").concat(ncname, ")"); //匹配特殊标签 形如 abc:234 前面的abc:可有可无
@@ -803,7 +834,8 @@
 
   var endTag = new RegExp("^<\\/".concat(qnameCapture, "[^>]*>")); // 匹配标签结尾 如 </abc-123> 捕获里面的标签名
 
-  var attribute = /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/; // 匹配属性  形如 id="app"
+  var attribute =
+    /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/; // 匹配属性  形如 id="app"
   // 解析标签生成ast核心
 
   function parse(html) {
@@ -821,14 +853,13 @@
         type: ELEMENT_TYPE,
         children: [],
         attrs: attrs,
-        parent: null
+        parent: null,
       };
     } // 对开始标签进行处理
 
-
     function handleStartTag(_ref) {
       var tagName = _ref.tagName,
-          attrs = _ref.attrs;
+        attrs = _ref.attrs;
       var element = createASTElement(tagName, attrs);
 
       if (!root) {
@@ -838,7 +869,6 @@
       currentParent = element;
       stack.push(element);
     } // 对结束标签进行处理
-
 
     function handleEndTag(tagName) {
       // 栈结构 []
@@ -853,7 +883,6 @@
       }
     } // 对文本进行处理
 
-
     function handleChars(text) {
       // 去掉空格
       text = text.replace(/\s/g, "");
@@ -861,7 +890,7 @@
       if (text) {
         currentParent.children.push({
           type: TEXT_TYPE,
-          text: text
+          text: text,
         });
       }
     }
@@ -879,7 +908,6 @@
           handleStartTag(startTagMatch);
           continue;
         } // 匹配结束标签</
-
 
         var endTagMatch = html.match(endTag);
 
@@ -903,14 +931,13 @@
       }
     } // 匹配开始标签
 
-
     function parseStartTag() {
       var start = html.match(startTagOpen);
 
       if (start) {
         var match = {
           tagName: start[1],
-          attrs: []
+          attrs: [],
         }; //匹配到了开始标签 就截取掉
 
         advance(start[0].length); // 开始匹配属性
@@ -919,12 +946,14 @@
 
         var end, attr;
 
-        while (!(end = html.match(startTagClose)) && (attr = html.match(attribute))) {
+        while (
+          !(end = html.match(startTagClose)) &&
+          (attr = html.match(attribute))
+        ) {
           advance(attr[0].length);
           attr = {
             name: attr[1],
-            value: attr[3] || attr[4] || attr[5] //这里是因为正则捕获支持双引号 单引号 和无引号的属性值
-
+            value: attr[3] || attr[4] || attr[5], //这里是因为正则捕获支持双引号 单引号 和无引号的属性值
           };
           match.attrs.push(attr);
         }
@@ -937,17 +966,15 @@
       }
     } //截取html字符串 每次匹配到了就往前继续匹配
 
-
     function advance(n) {
       html = html.substring(n);
     } //   返回生成的ast
-
 
     return root;
   }
 
   var defaultTagRE = /\{\{((?:.|\r?\n)+?)\}\}/g; //匹配花括号 {{  }} 捕获花括号里面的内容
-  // 判断节点类型  
+  // 判断节点类型
   // 主要包含处理文本核心
   // 源码这块包含了复杂的处理  比如 v-once v-for v-if 自定义指令 slot等等  咱们这里只考虑普通文本和变量表达式{{}}的处理
 
@@ -964,12 +991,11 @@
         return "_v(".concat(JSON.stringify(text), ")");
       } // 正则是全局模式 每次需要重置正则的lastIndex属性  不然会引发匹配bug
 
-
-      var lastIndex = defaultTagRE.lastIndex = 0;
+      var lastIndex = (defaultTagRE.lastIndex = 0);
       var tokens = [];
       var match, index;
 
-      while (match = defaultTagRE.exec(text)) {
+      while ((match = defaultTagRE.exec(text))) {
         // index代表匹配到的位置
         index = match.index;
 
@@ -978,22 +1004,18 @@
           tokens.push(JSON.stringify(text.slice(lastIndex, index)));
         } //   放入捕获到的变量内容
 
-
         tokens.push("_s(".concat(match[1].trim(), ")")); //   匹配指针后移
 
         lastIndex = index + match[0].length;
       } // 如果匹配完了花括号  text里面还有剩余的普通文本 那么继续push
 
-
       if (lastIndex < text.length) {
         tokens.push(JSON.stringify(text.slice(lastIndex)));
       } // _v表示创建文本
 
-
       return "_v(".concat(tokens.join("+"), ")");
     }
   } // 处理attrs属性
-
 
   function genProps(attrs) {
     var str = "";
@@ -1006,9 +1028,9 @@
           var obj = {};
           attr.value.split(";").forEach(function (item) {
             var _item$split = item.split(":"),
-                _item$split2 = _slicedToArray(_item$split, 2),
-                key = _item$split2[0],
-                value = _item$split2[1];
+              _item$split2 = _slicedToArray(_item$split, 2),
+              key = _item$split2[0],
+              value = _item$split2[1];
 
             obj[key] = value;
           });
@@ -1022,21 +1044,26 @@
     return "{".concat(str.slice(0, -1), "}");
   } // 生成子节点 调用gen函数进行递归创建
 
-
   function getChildren(el) {
     var children = el.children;
 
     if (children) {
-      return "".concat(children.map(function (c) {
-        return gen(c);
-      }).join(","));
+      return "".concat(
+        children
+          .map(function (c) {
+            return gen(c);
+          })
+          .join(",")
+      );
     }
   } // 递归创建生成code
 
-
   function generate(el) {
     var children = getChildren(el);
-    var code = "_c('".concat(el.tag, "',").concat(el.attrs.length ? "".concat(genProps(el.attrs)) : "undefined").concat(children ? ",".concat(children) : "", ")");
+    var code = "_c('"
+      .concat(el.tag, "',")
+      .concat(el.attrs.length ? "".concat(genProps(el.attrs)) : "undefined")
+      .concat(children ? ",".concat(children) : "", ")");
     return code;
   }
 
@@ -1060,7 +1087,7 @@
     return renderFn;
   }
 
-  // patch用来渲染和更新视图 
+  // patch用来渲染和更新视图
   function patch(oldVnode, vnode) {
     // 判断传入的oldVnode是否是一个真实元素
     // 这里很关键  初次渲染 传入的vm.$el就是咱们传入的el选项  所以是真实dom
@@ -1090,7 +1117,6 @@
           oldVnode.el.parentNode.replaceChild(createElm(vnode), oldVnode.el);
         } // 如果旧节点是一个文本节点
 
-
         if (!oldVnode.tag) {
           if (oldVnode.text !== vnode.text) {
             oldVnode.el.textContent = vnode.text;
@@ -1098,9 +1124,7 @@
         } // 不符合上面两种 代表标签一致 并且不是文本节点
         // 为了节点复用 所以直接把旧的虚拟dom对应的真实dom赋值给新的虚拟dom的el属性
 
-
-        var _el = vnode.el = oldVnode.el; // 更新属性
-
+        var _el = (vnode.el = oldVnode.el); // 更新属性
 
         updateProperties(vnode, oldVnode.data);
         var oldCh = oldVnode.children || []; // 老的儿子
@@ -1128,32 +1152,25 @@
   function createComponent$1(vnode) {
     // 初始化组件
     // 创建组件实例
-    var i = vnode.data;
+    var i = vnode.data; // i = vnode.data.hook.init
 
-    if ((i = i.hook) && (i = i.init)) {
-      i(vnode);
-    } // 如果组件实例化完毕有componentInstance属性 那证明是组件
+    if ((i = i.hook) && (i = i.init)) i(vnode); // 如果组件实例化完毕有componentInstance属性 那证明是组件
 
-
-    if (vnode.componentInstance) {
-      return true;
-    }
+    if (vnode.componentInstance) return true;
   } // 虚拟dom转成真实dom
-
 
   function createElm(vnode) {
     var tag = vnode.tag;
-        vnode.data;
-        vnode.key;
-        var children = vnode.children,
-        text = vnode.text; //   判断虚拟dom 是元素节点还是文本节点
+    vnode.data;
+    vnode.key;
+    var children = vnode.children,
+      text = vnode.text; //   判断虚拟dom 是元素节点还是文本节点
 
     if (typeof tag === "string") {
       if (createComponent$1(vnode)) {
         // 如果是组件 返回真实组件渲染的真实dom
         return vnode.componentInstance.$el;
       } //   虚拟dom的el属性指向真实dom 方便后续更新diff算法操作
-
 
       vnode.el = document.createElement(tag); // 解析虚拟dom属性
 
@@ -1170,9 +1187,9 @@
     return vnode.el;
   } // 解析vnode的data属性 映射到真实dom上
 
-
   function updateProperties(vnode) {
-    var oldProps = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    var oldProps =
+      arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var newProps = vnode.data || {};
     var el = vnode.el; // 真实节点
     // 如果新的节点没有 需要把老的节点属性移除
@@ -1183,7 +1200,6 @@
       }
     } // 对style样式做特殊处理 如果新的没有 需要把老的style值置为空
 
-
     var newStyle = newProps.style || {};
     var oldStyle = oldProps.style || {};
 
@@ -1192,7 +1208,6 @@
         el.style[key] = "";
       }
     } // 遍历新的属性 进行增加操作
-
 
     for (var _key in newProps) {
       if (_key === "style") {
@@ -1208,11 +1223,10 @@
     }
   } // 判断两个vnode的标签和key是否相同 如果相同 就可以认为是同一节点就地复用
 
-
   function isSameVnode(oldVnode, newVnode) {
+    // 思考：v-for为什么添加key，
     return oldVnode.tag === newVnode.tag && oldVnode.key === newVnode.key;
   } // diff算法核心 采用双指针的方式 对比新老vnode的儿子节点
-
 
   function updateChildren(parent, oldCh, newCh) {
     var oldStartIndex = 0; //老儿子的起始下标
@@ -1236,7 +1250,6 @@
       });
       return map;
     } // 生成的映射表
-
 
     var map = makeIndexByKey(oldCh); // 只有当新老儿子的双指标的起始位置不大于结束位置的时候  才能循环 一方停止了就需要结束循环
 
@@ -1271,8 +1284,8 @@
         oldEndVnode = oldCh[--oldEndIndex];
         newStartVnode = newCh[++newStartIndex];
       } else {
-        // 上述四种情况都不满足 那么需要暴力对比
-        // 根据老的子节点的key和index的映射表 从新的开始子节点进行查找 如果可以找到就进行移动操作 如果找不到则直接进行插入
+        // 上述四种情况属于diff的优化 优化了向后添加，向前添加，尾部移动到头部，头部移动到尾部，反转
+        // 暴力对比 根据老的子节点的key和index的映射表 从新的开始子节点进行查找 如果可以找到就进行移动操作 如果找不到则直接进行插入
         var moveIndex = map[newStartVnode.key];
 
         if (!moveIndex) {
@@ -1290,15 +1303,14 @@
       }
     } // 如果老节点循环完毕了 但是新节点还有  证明  新节点需要被添加到头部或者尾部
 
-
     if (newStartIndex <= newEndIndex) {
       for (var i = newStartIndex; i <= newEndIndex; i++) {
-        // 这是一个优化写法 insertBefore的第一个参数是null等同于appendChild作用
-        var ele = newCh[newEndIndex + 1] == null ? null : newCh[newEndIndex + 1].el;
+        // 这是一个优化写法 insertBefore的第二个参数是null等同于appendChild作用
+        var ele =
+          newCh[newEndIndex + 1] == null ? null : newCh[newEndIndex + 1].el;
         parent.insertBefore(createElm(newCh[i]), ele);
       }
     } // 如果新节点循环完毕 老节点还有  证明老的节点需要直接被删除
-
 
     if (oldStartIndex <= oldEndIndex) {
       for (var _i = oldStartIndex; _i <= oldEndIndex; _i++) {
@@ -1323,11 +1335,16 @@
 
     var updateComponent = function updateComponent() {
       vm._update(vm._render());
-    };
+    }; // 使用观察者模式代替 手动调用 updateComponent()
 
-    new Watcher(vm, updateComponent, function () {
-      callHook(vm, "beforeUpdate");
-    }, true);
+    new Watcher(
+      vm,
+      updateComponent,
+      function () {
+        callHook(vm, "beforeUpdate");
+      },
+      true
+    );
     callHook(vm, "mounted");
   }
   function lifecycleMixin(Vue) {
@@ -1339,10 +1356,10 @@
       vm._vnode = vnode;
 
       if (!prevVnode) {
-        // patch是渲染vnode为真实dom核心
+        // patch 渲染vnode为真实dom
         vm.$el = patch(vm.$el, vnode); // 初次渲染 vm._vnode肯定不存在 要通过虚拟节点 渲染出真实的dom 赋值给$el属性
       } else {
-        vm.$el = patch(prevVnode, vnode); // 更新时把上次的vnode和这次更新的vnode穿进去 进行diff算法
+        vm.$el = patch(prevVnode, vnode); // 更新时把上次的vnode和这次更新的vnode传进去 进行diff算法
       }
     };
   }
@@ -1360,10 +1377,11 @@
   function initMixin$1(Vue) {
     Vue.prototype._init = function (options) {
       var vm = this; // 这里的this代表调用_init方法的对象(实例对象)
-      //  this.$options就是用户new Vue的时候传入的属性和全局的Vue.options合并之后的结果
+      // this.$options缓存 用户new Vue的时候传入的属性和全局的Vue.options合并之后的结果
+      // vm.constructor指向的是vm.__proto__.constructor===Vue.prototype.constructor===Vue
 
       vm.$options = mergeOptions(vm.constructor.options, options);
-      callHook(vm, "beforeCreate"); // 初始化状态
+      callHook(vm, "beforeCreate"); // 初始化状态，将data转化成响应式
 
       initState(vm);
       callHook(vm, "created"); // 如果有el属性 进行模板渲染
@@ -1372,51 +1390,66 @@
         vm.$mount(vm.$options.el);
       }
     }; // 这块代码在源码里面的位置其实是放在entry-runtime-with-compiler.js里面
-    // 代表的是Vue源码里面包含了compile编译功能 这个和runtime-only版本需要区分开
-
+    // 表示Vue包含compile编译功能的版本 和runtime-only版本区分开
 
     Vue.prototype.$mount = function (el) {
       var vm = this;
       var options = vm.$options;
-      el = document.querySelector(el); // 如果不存在render属性
+      vm.$el = el = document.querySelector(el); // 将模板转换成对应渲染函数 =>虚拟dom vnode => diff算法 更新虚拟dom => 产生真实节点，更新
 
       if (!options.render) {
-        // 如果存在template属性
         var template = options.template;
 
         if (!template && el) {
           // 如果不存在render和template 但是存在el属性 直接将模板赋值到el所在的外层html结构（就是el本身 并不是父元素）
           template = el.outerHTML;
-        } // 最终需要把tempalte模板转化成render函数
-
+        } // 如果存在template属性，把template模板转化成render函数
 
         if (template) {
           var render = compileToFunctions(template);
           options.render = render;
-        }
-      } // 将当前组件实例挂载到真实的el节点上面
-
+        } // 既没template又没有el的情况呢？
+        // 要熟悉 options.components API 的用法
+      } // 组件挂载流程
 
       return mountComponent(vm, el);
     };
   }
 
-  var Vnode = function Vnode(tag, data, key, children, text, componentOptions) {
+  var Vnode = /*#__PURE__*/ _createClass(function Vnode(
+    tag,
+    data,
+    key,
+    children,
+    text,
+    componentOptions
+  ) {
     _classCallCheck(this, Vnode);
 
-    console.log("🚀 ~ file: index.js ~ line 5 ~ Vnode ~ constructor ~ componentOptions", componentOptions);
+    console.log(
+      "🚀 ~ file: index.js ~ line 5 ~ Vnode ~ constructor ~ componentOptions",
+      componentOptions
+    );
     this.tag = tag;
     this.data = data;
     this.key = key;
     this.children = children;
-    this.text = text;
+    this.text = text; // 组件节点标识
+
     this.componentOptions = componentOptions;
-  }; // 创建元素vnode 等于render函数里面的 h=>h(App)
+  }); // 创建元素vnode 等于render函数里面的 h=>h(App)
   function createElement(vm, tag) {
-    var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    var data =
+      arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     var key = data.key;
 
-    for (var _len = arguments.length, children = new Array(_len > 3 ? _len - 3 : 0), _key = 3; _key < _len; _key++) {
+    for (
+      var _len = arguments.length,
+        children = new Array(_len > 3 ? _len - 3 : 0),
+        _key = 3;
+      _key < _len;
+      _key++
+    ) {
       children[_key - 3] = arguments[_key];
     }
 
@@ -1436,24 +1469,29 @@
       Ctor = vm.$options._base.extend(Ctor);
     } // 声明组件自己内部的生命周期
 
-
     data.hook = {
       // 组件创建过程的自身初始化方法
       init: function init(vnode) {
-        var child = vnode.componentInstance = new Ctor({
-          _isComponent: true
-        }); //实例化组件
+        var vm = (vnode.componentInstance = new Ctor({
+          _isComponent: true,
+        })); //实例化组件
 
-        child.$mount(); //因为没有传入el属性  需要手动挂载 为了在组件实例上面增加$el方法可用于生成组件的真实渲染节点
-      }
+        vm.$mount(); //因为没有传入el属性  需要手动挂载 为了在组件实例上面增加$el方法可用于生成组件的真实渲染节点
+      },
     }; // 组件vnode也叫占位符vnode  ==> $vnode
 
-    return new Vnode("vue-component-".concat(Ctor.cid, "-").concat(tag), data, key, undefined, undefined, {
-      Ctor: Ctor,
-      children: children
-    });
+    return new Vnode(
+      "vue-component-".concat(Ctor.cid, "-").concat(tag),
+      data,
+      key,
+      undefined,
+      undefined,
+      {
+        Ctor: Ctor,
+        children: children,
+      }
+    );
   } // 创建文本vnode
-
 
   function createTextNode(vm, text) {
     return new Vnode(undefined, undefined, undefined, undefined, text);
@@ -1462,7 +1500,11 @@
   function renderMixin(Vue) {
     // render函数里面有_c _v _s方法需要定义
     Vue.prototype._c = function () {
-      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      for (
+        var _len = arguments.length, args = new Array(_len), _key = 0;
+        _key < _len;
+        _key++
+      ) {
         args[_key] = arguments[_key];
       }
 
@@ -1477,19 +1519,25 @@
 
     Vue.prototype._s = function (val) {
       // 如果模板里面的是一个对象  需要JSON.stringify
-      return val == null ? "" : _typeof(val) === "object" ? JSON.stringify(val) : val;
+      return val == null
+        ? ""
+        : _typeof(val) === "object"
+        ? JSON.stringify(val)
+        : val;
     };
 
     Vue.prototype._render = function () {
       var vm = this; // 获取模板编译生成的render方法
 
       var render = vm.$options.render;
-      console.log("🚀 ~ file: render.js ~ line 28 ~ renderMixin ~ render", render); // 生成vnode--虚拟dom
+      console.log(
+        "🚀 ~ file: render.js ~ line 28 ~ renderMixin ~ render",
+        render
+      ); // 生成vnode--虚拟dom
 
       var vnode = render.call(vm);
       return vnode;
     }; // 挂载在原型的nextTick方法 可供用户手动调用
-
 
     Vue.prototype.$nextTick = nextTick;
   }
@@ -1504,13 +1552,13 @@
   function initAssetRegisters(Vue) {
     ASSETS_TYPE.forEach(function (type) {
       Vue[type] = function (id, definition) {
-        if (type === 'component') {
+        if (type === "component") {
           // 全局组件注册
           // 子组件可能也有extend方法  VueComponent.component方法
           definition = this.options._base.extend(definition);
         }
 
-        this.options[type + 's'][id] = definition;
+        this.options[type + "s"][id] = definition;
       };
     });
   }
@@ -1550,12 +1598,13 @@
     initAssetRegisters(Vue); //assets注册方法
   }
 
+  // new =》__proto__ 指向 Vue.prototype
+
   function Vue(options) {
-    // 这里开始进行Vue初始化工作
+    // 这里开始进行Vue初始化工作，_init()是原型方法 来自initMixin
     this._init(options);
   } // _init方法是挂载在Vue原型的方法 通过引入文件的方式进行原型挂载需要传入Vue
   // 此做法有利于代码分割
-
 
   initMixin$1(Vue);
   renderMixin(Vue);
@@ -1564,6 +1613,5 @@
   initGlobalApi(Vue);
 
   return Vue;
-
-})));
+});
 //# sourceMappingURL=vue.js.map
