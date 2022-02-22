@@ -37,14 +37,15 @@ if (typeof Promise !== "undefined") {
     setTimeout(flushCallbacks, 0);
   };
 }
-
+// TODO 异步组件的实现原理？
 export function nextTick(cb) {
   // 除了渲染watcher  还有用户自己手动调用的nextTick 一起被收集到数组
   callbacks.push(cb);
+  // 门阀 多次调用 nextTick 只执行一次
   if (!pending) {
     // Promise.resolve().then(flushCallbacks) // Vue3 不考虑兼容性
-    // 如果多次调用nextTick  只会执行一次异步 等异步队列清空之后再把标志变为false
     pending = true;
+    // 异步执行
     timerFunc();
   }
 }

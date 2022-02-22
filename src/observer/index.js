@@ -89,9 +89,9 @@ function dependArray(value) {
   }
 }
 export function observe(data) {
-  // 递归进行属性劫持
   if (typeof data !== "object" || data == null) {
     return;
   }
+  // 如果是对象或数组 将递归进行属性劫持 返回新ob实例
   return new Observer(data);
 }

@@ -26,6 +26,7 @@ export default class Dep {
 // 默认Dep.target为null
 Dep.target = null;
 // 栈结构用来存watcher
+// TODO 为什么使用栈来保存watcher？
 const targetStack = [];
 
 export function pushTarget(watcher) {

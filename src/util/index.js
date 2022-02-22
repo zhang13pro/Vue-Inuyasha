@@ -1,4 +1,5 @@
 import { ASSETS_TYPE } from "../global-api/const";
+
 export const LIFECYCLE_HOOKS = [
   "beforeCreate",
   "created",
@@ -11,9 +12,9 @@ export const LIFECYCLE_HOOKS = [
 ];
 
 // 合并策略
-const strats = {};
+const strategy = {};
 
-//生命周期合并策略
+// 生命周期合并策略 注意这里返回的是数组
 function mergeHook(parentVal, childVal) {
   if (childVal) {
     if (parentVal) {
@@ -38,10 +39,10 @@ function mergeAssets(parentVal, childVal) {
 }
 
 LIFECYCLE_HOOKS.forEach((hook) => {
-  strats[hook] = mergeHook;
+  strategy[hook] = mergeHook;
 });
 ASSETS_TYPE.forEach((type) => {
-  strats[type + "s"] = mergeAssets;
+  strategy[type + "s"] = mergeAssets;
 });
 
 export function mergeOptions(parent, child) {
@@ -59,8 +60,8 @@ export function mergeOptions(parent, child) {
 
   function mergeFiled(k) {
     //真正合并字段方法
-    if (strats[k]) {
-      options[k] = strats[k](parent[k], child[k]);
+    if (strategy[k]) {
+      options[k] = strategy[k](parent[k], child[k]);
     } else {
       // 默认策略
       options[k] = child[k] ? child[k] : parent[k];

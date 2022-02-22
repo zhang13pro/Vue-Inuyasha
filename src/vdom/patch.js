@@ -62,6 +62,7 @@ function createComponent(vnode) {
   // 创建组件实例
   let i = vnode.data;
   // i = vnode.data.hook.init
+  // 调用组件data.hook.init方法进行组件初始化过程 最终组件的vnode.componentInstance.$el就是组件渲染好的真实dom
   if ((i = i.hook) && (i = i.init)) i(vnode);
   // 如果组件实例化完毕有componentInstance属性 那证明是组件
   if (vnode.componentInstance) return true;
@@ -132,6 +133,7 @@ function isSameVnode(oldVnode, newVnode) {
   return oldVnode.tag === newVnode.tag && oldVnode.key === newVnode.key;
 }
 // diff算法核心 采用双指针的方式 对比新老vnode的儿子节点
+// TODO Vue的diff为什么不引入React的Fiber
 function updateChildren(parent, oldCh, newCh) {
   let oldStartIndex = 0; //老儿子的起始下标
   let oldStartVnode = oldCh[0]; //老儿子的第一个节点
