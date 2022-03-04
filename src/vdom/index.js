@@ -30,7 +30,6 @@ export function createElement(vm, tag, data = {}, ...children) {
   }
 }
 
-// TODO Vue怎么将VDOM控制在组件级别
 function createComponent(vm, tag, data, key, children, Ctor) {
   if (isObject(Ctor)) {
     //   如果没有被改造成构造函数

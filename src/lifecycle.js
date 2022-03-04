@@ -16,6 +16,7 @@ export function mountComponent(vm, el) {
     vm._update(vm._render());
   };
   // 使用观察者模式代替 手动调用 updateComponent()
+  // TODO Vue的更新粒度为什么是组件级？
   new Watcher(
     vm,
     updateComponent,
