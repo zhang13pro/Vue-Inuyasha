@@ -1,1 +1,1 @@
-export const ASSETS_TYPE = ["component", "directive", "filter"];
+export const ASSETS_TYPE = ["component", "directive", "filter"]

@@ -1,4 +1,4 @@
-import { ASSETS_TYPE } from "../global-api/const";
+import { ASSETS_TYPE } from "../global-api/const"
 
 export const LIFECYCLE_HOOKS = [
   "beforeCreate",
@@ -9,72 +9,72 @@ export const LIFECYCLE_HOOKS = [
   "updated",
   "beforeDestroy",
   "destroyed",
-];
+]
 
 // 合并策略
-const strategy = {};
+const strategy = {}
 
 // 生命周期合并策略 注意这里返回的是数组
 function mergeHook(parentVal, childVal) {
   if (childVal) {
     if (parentVal) {
-      return parentVal.concat(childVal);
+      return parentVal.concat(childVal)
     } else {
-      return [childVal];
+      return [childVal]
     }
   } else {
-    return parentVal;
+    return parentVal
   }
 }
 
 // 组件 指令 过滤器的合并策略
 function mergeAssets(parentVal, childVal) {
-  const res = Object.create(parentVal); //比如有同名的全局组件和自己定义的局部组件 那么parentVal代表全局组件 自己定义的组件是childVal  首先会查找自已局部组件有就用自己的  没有就从原型继承全局组件  res.__proto__===parentVal
+  const res = Object.create(parentVal) //比如有同名的全局组件和自己定义的局部组件 那么parentVal代表全局组件 自己定义的组件是childVal  首先会查找自已局部组件有就用自己的  没有就从原型继承全局组件  res.__proto__===parentVal
   if (childVal) {
     for (let k in childVal) {
-      res[k] = childVal[k];
+      res[k] = childVal[k]
     }
   }
-  return res;
+  return res
 }
 
 LIFECYCLE_HOOKS.forEach((hook) => {
-  strategy[hook] = mergeHook;
-});
+  strategy[hook] = mergeHook
+})
 ASSETS_TYPE.forEach((type) => {
-  strategy[type + "s"] = mergeAssets;
-});
+  strategy[type + "s"] = mergeAssets
+})
 
 export function mergeOptions(parent, child) {
-  const options = {};
+  const options = {}
   // 遍历父亲
   for (let k in parent) {
-    mergeFiled(k);
+    mergeFiled(k)
   }
   // 父亲没有 儿子有
   for (let k in child) {
     if (!parent.hasOwnProperty(k)) {
-      mergeFiled(k);
+      mergeFiled(k)
     }
   }
 
   function mergeFiled(k) {
     //真正合并字段方法
     if (strategy[k]) {
-      options[k] = strategy[k](parent[k], child[k]);
+      options[k] = strategy[k](parent[k], child[k])
     } else {
       // 默认策略
-      options[k] = child[k] ? child[k] : parent[k];
+      options[k] = child[k] ? child[k] : parent[k]
     }
   }
-  return options;
+  return options
 }
 
 export function isObject(data) {
   if (typeof data !== "object" || data == null) {
-    return false;
+    return false
   }
-  return true;
+  return true
 }
 
 export function isReservedTag(tagName) {
@@ -90,10 +90,10 @@ export function isReservedTag(tagName) {
     "button,datalist,fieldset,form,input,label,legend,meter,optgroup,option," +
     "output,progress,select,textarea," +
     "details,dialog,menu,menuitem,summary," +
-    "content,element,shadow,template,blockquote,iframe,tfoot";
-  let obj = {};
+    "content,element,shadow,template,blockquote,iframe,tfoot"
+  let obj = {}
   str.split(",").forEach((tag) => {
-    obj[tag] = true;
-  });
-  return obj[tagName];
+    obj[tag] = true
+  })
+  return obj[tagName]
 }
