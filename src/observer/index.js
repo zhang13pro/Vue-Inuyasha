@@ -1,5 +1,8 @@
 import { arrayMethods } from "./array"
+import { hasProto } from "../util/env"
 import Dep from "./dep"
+
+const arrayKeys = Object.getOwnPropertyNames(arrayMethods)
 
 class Observer {
   // 观测值
@@ -18,7 +21,11 @@ class Observer {
     if (Array.isArray(value)) {
       // 这里对数组做了额外判断
       // 通过重写数组原型方法来对数组的七种方法进行拦截
-      value.__proto__ = arrayMethods
+      if (hasProto) {
+        protoAugment(value, arrayMethods)
+      } else {
+        copyAugment(value, arrayMethods, arrayKeys)
+      }
       // 如果数组里面还包含数组 递归判断
       this.observeArray(value)
     } else {
@@ -92,4 +99,25 @@ export function observe(data) {
   }
   // 如果是对象或数组 将递归进行属性劫持 返回新ob实例
   return new Observer(data)
+}
+
+// helpers
+
+function def(obj, key, val, enumerable) {
+  Object.defineProperty(obj, key, {
+    value: val,
+    enumerable: !!enumerable,
+    writable: true,
+    configurable: true,
+  })
+}
+
+function protoAugment(target, src) {
+  target.__proto__ = src
+}
+function copyAugment(target, src, keys) {
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i]
+    def(target, key, src[key])
+  }
 }

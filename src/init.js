@@ -1,4 +1,5 @@
 import { initState } from "./state"
+import { initEvents } from "./instance/events"
 import { compileToFunctions } from "./compiler/index"
 import { callHook, mountComponent } from "./lifecycle"
 import { mergeOptions } from "./util/index"
@@ -10,9 +11,14 @@ export function initMixin(Vue) {
     // this.$options缓存 用户new Vue的时候传入的属性和全局的Vue.options合并之后的结果
     // vm.constructor指向的是vm.__proto__.constructor===Vue.prototype.constructor===Vue
     vm.$options = mergeOptions(vm.constructor.options, options)
+    initLifecycle(vm) // TODO
+    initEvents(vm)
+    initRender(vm) // TODO
     callHook(vm, "beforeCreate")
+    initInjections(vm) // TODO resolve injections before data/props
     // 初始化状态，将data转化成响应式
     initState(vm)
+    initProvide(vm) // TODO resolve provide after data/props
     callHook(vm, "created")
     // 如果有el属性 进行模板渲染
     if (vm.$options.el) {

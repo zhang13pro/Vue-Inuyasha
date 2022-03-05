@@ -11,9 +11,9 @@ export function initState(vm) {
   if (opts.props) initProps(vm, opts.props)
   if (opts.methods) initMethods(vm, opts.methods)
   if (opts.data) {
-    // 初始化自定义的data
     initData(vm)
   } else {
+    /*该组件没有data的时候绑定一个空对象*/
     observe((vm._data = {}), true /* asRootData */)
   }
   if (opts.computed) initComputed(vm, opts.computed)
