@@ -53,6 +53,7 @@ function initData(vm) {
   // vue组件data推荐使用函数 防止数据在组件之间共享
   data = vm._data = typeof data === "function" ? data.call(vm) : data
 
+  // proxy data on instance
   // 把data数据代理到vm 也就是Vue实例上面 我们可以使用this.a来访问this._data.a
   for (let key in data) {
     proxy(vm, `_data`, key)

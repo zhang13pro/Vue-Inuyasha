@@ -4,27 +4,29 @@ import Dep from "./dep"
 
 const arrayKeys = Object.getOwnPropertyNames(arrayMethods)
 
+/**
+ * Observer class that are attached to each observed
+ * object. Once attached, the observer converts target
+ * object's property keys into getter/setters that
+ * collect dependencies and dispatches updates.
+ */
 class Observer {
   // 观测值
   constructor(value) {
     this.value = value
     this.dep = new Dep() //当数组使用7种重写方法时  是无法进行依赖收集和派发更新的  此属性主要辅助数组更新
-    Object.defineProperty(value, "__ob__", {
-      //  值指代的就是Observer的实例
-      value: this,
-      //  不可枚举
-      enumerable: false,
-      writable: true,
-      configurable: true,
-    })
+    /*
+    将Observer实例绑定到data的__ob__属性上面去，
+    observe的时候会先检测是否已经有__ob__对象存放Observer实例了，
+    */
+    def(value, "__ob__", this)
 
     if (Array.isArray(value)) {
-      // 这里对数组做了额外判断
-      // 通过重写数组原型方法来对数组的七种方法进行拦截
+      // 是否支持__proto__
       if (hasProto) {
-        protoAugment(value, arrayMethods)
+        protoAugment(value, arrayMethods) // 数组增强
       } else {
-        copyAugment(value, arrayMethods, arrayKeys)
+        copyAugment(value, arrayMethods, arrayKeys) // 对每个突变方法def
       }
       // 如果数组里面还包含数组 递归判断
       this.observeArray(value)
@@ -32,6 +34,12 @@ class Observer {
       this.walk(value)
     }
   }
+
+  /**
+   * Walk through each property and convert them into
+   * getter/setters. This method should only be called when
+   * value type is Object.
+   */
   walk(data) {
     // 让对象上的所有属性依次进行观测
     let keys = Object.keys(data)
@@ -41,6 +49,10 @@ class Observer {
       defineReactive(data, key, value)
     }
   }
+
+  /**
+   * Observe a list of Array items.
+   */
   observeArray(items) {
     for (let i = 0; i < items.length; i++) {
       observe(items[i])
@@ -93,6 +105,12 @@ function dependArray(value) {
     }
   }
 }
+
+/**
+ * Attempt to create an observer instance for a value,
+ * returns the new observer if successfully observed,
+ * or the existing observer if the value already has one.
+ */
 export function observe(data) {
   if (typeof data !== "object" || data == null) {
     return
@@ -112,9 +130,18 @@ function def(obj, key, val, enumerable) {
   })
 }
 
+/**
+ * Augment an target Object or Array by intercepting
+ * the prototype chain using __proto__
+ */
 function protoAugment(target, src) {
   target.__proto__ = src
 }
+
+/**
+ * Augment an target Object or Array by defining
+ * hidden properties.
+ */
 function copyAugment(target, src, keys) {
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i]
