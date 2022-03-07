@@ -1,7 +1,3 @@
-// vm._events = {
-//   eventName: [func1, func2, func3],
-// }
-
 let target
 
 function add(event, fn) {
