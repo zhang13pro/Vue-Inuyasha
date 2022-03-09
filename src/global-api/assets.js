@@ -1,6 +1,9 @@
 import { ASSETS_TYPE } from "./const"
 
 export default function initAssetRegisters(Vue) {
+  /**
+   * Create asset registration methods.
+   */
   ASSETS_TYPE.forEach((type) => {
     Vue[type] = function (id, definition) {
       if (type === "component") {

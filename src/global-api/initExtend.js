@@ -13,7 +13,7 @@ export default function initExtend(Vue) {
     Sub.prototype = Object.create(this.prototype) // 子类原型指向父类
     Sub.prototype.constructor = Sub // 修正 constructor
     Sub.options = mergeOptions(this.options, extendOptions) //合并自己的options和父类的options
-    return Sub
+    return Sub // 返回VueComponent方法
   }
 }
 

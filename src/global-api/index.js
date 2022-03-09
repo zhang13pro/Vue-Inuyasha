@@ -5,7 +5,7 @@ import { ASSETS_TYPE } from "./const"
 
 export function initGlobalApi(Vue) {
   Vue.options = {} // 全局的组件 指令 过滤器
-  initMixin(Vue)
+  initMixin(Vue) // 注册全局mixin api
   ASSETS_TYPE.forEach((type) => {
     Vue.options[type + "s"] = {}
   })
